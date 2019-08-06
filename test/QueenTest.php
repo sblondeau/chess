@@ -5,12 +5,11 @@ namespace Test;
 
 
 use App\ChessBoard;
-use App\ChessBoardInitializer;
 use App\Game;
-use App\Tower;
+use App\Queen;
 use PHPUnit\Framework\TestCase;
 
-class TowerTest extends TestCase
+class QueenTest extends TestCase
 {
     private $chessboard;
     private $game;
@@ -19,7 +18,7 @@ class TowerTest extends TestCase
     {
         $smallChessBoard = [
             'D1' => [Queen::class, 'white'],
-            'D8' => [Queen::class, 'white'],
+            'D8' => [Queen::class, 'black'],
         ];
 
         $this->chessboard = new ChessBoard($smallChessBoard);
@@ -36,6 +35,20 @@ class TowerTest extends TestCase
     {
         $this->game->gameMove('D1', 'D5');
         $this->assertInstanceOf(Queen::class, $this->game->getChessBoard()->getPiece('D5'));
+    }
+
+    public function testDiagonalMove()
+    {
+        $this->game->gameMove('D1', 'B3');
+        $this->assertInstanceOf(Queen::class, $this->game->getChessBoard()->getPiece('B3'));
+    }
+
+    public function testCatch()
+    {
+        $this->assertEquals('black', $this->game->getChessBoard()->getPiece('D8')->getColor());
+        $this->game->gameMove('D1', 'D8');
+        $this->assertInstanceOf(Queen::class, $this->game->getChessBoard()->getPiece('D8'));
+        $this->assertEquals('white', $this->game->getChessBoard()->getPiece('D8')->getColor());
     }
 
     public function testNotAuthorizedMove()

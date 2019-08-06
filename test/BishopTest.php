@@ -6,7 +6,6 @@ namespace Test;
 
 use App\Bishop;
 use App\ChessBoard;
-use App\ChessBoardInitializer;
 use App\Game;
 use App\Tower;
 use PHPUnit\Framework\TestCase;

@@ -7,7 +7,6 @@ namespace Test;
 use App\ChessBoard;
 use App\ChessBoardInitializer;
 use App\Game;
-use App\Tower;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
