@@ -39,10 +39,15 @@ class ChessBoard
 
     public function isFreeCase(Piece $piece, string $destination): bool
     {
-        return $this->getPiece($destination) === null ||
+        return self::caseExists($destination) && ($this->getPiece($destination) === null ||
             ($this->getPiece($destination) instanceof Piece &&
                 $this->getPiece($destination)->getColor() !== $piece->getColor()
-            );
+            ));
+    }
+
+    public function isEmptyCase(string $coords) :bool
+    {
+        return self::caseExists($coords) && $this->getPiece($coords) === null;
     }
 
     public function getPiece(string $coords): ?Piece

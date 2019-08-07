@@ -29,10 +29,7 @@ class Knight extends Piece
 
                 for ($multiplier = -1; $multiplier <= 1; $multiplier += 2) {
                     $col = $colStartNumber + (3 - abs($i)) * $multiplier;
-                    $case = (ChessBoard::getColumns()[$col - 1] ?? '') . $row;
-                    if (ChessBoard::caseExists($case)) {
-                        $cases[] = $case;
-                    }
+                    $cases[] = (ChessBoard::getColumns()[$col - 1] ?? '') . $row;
                 }
             }
         }

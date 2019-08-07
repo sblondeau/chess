@@ -24,6 +24,7 @@ class PawnTest extends TestCase
             'D2' => [Pawn::class, 'white'],
             'A3' => [Knight::class, 'white'],
             'B3' => [Knight::class, 'black'],
+            'C3' => [Knight::class, 'black'],
             'A7' => [Pawn::class, 'black'],
             'B7' => [Pawn::class, 'black'],
             'C7' => [Pawn::class, 'black'],
@@ -40,30 +41,99 @@ class PawnTest extends TestCase
         $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C3'));
     }
 
-    // TODO : move white/black
-    // one/two case for 1st
-    // prise en diago uniquement (revoir freecase)
-    // prise en passant
-    // promotion
+    public function testWhiteMultiMovesOneCase()
+    {
+        $this->game->gameMove('C2', 'C3');
+        $this->game->gameMove('C3', 'C4');
+        $this->game->gameMove('C4', 'C5');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C5'));
+    }
 
-//    public function testMoveTwoCase()
-//    {
-//        $this->game->gameMove('C2', 'C4');
-//        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C4'));
-//    }
-//    public function testMoveTwiceOneCase()
-//    {
-//        $this->game->gameMove('C2', 'C3');
-//        $this->game->gameMove('C2', 'C4');
-//        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C4'));
-//    }
+    public function testWhiteMoveTwoCase()
+    {
+        $this->game->gameMove('C2', 'C4');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C4'));
+    }
 
+    public function testWhiteMoveTwoCaseOneCase()
+    {
+        $this->game->gameMove('C2', 'C4');
+        $this->game->gameMove('C4', 'C5');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C5'));
+    }
 
-    public function testNotFreeCaseMove()
+    public function testWhiteMoveTwiceTwoCase()
     {
         $this->expectException(\LogicException::class);
-        $this->game->gameMove('B1', 'C3');
-        $this->game->gameMove('C3', 'E2');
-        $this->game->gameMove('E2', 'C1');
+        $this->game->gameMove('C2', 'C4');
+        $this->game->gameMove('C4', 'C6');
     }
+
+    public function testWhiteMoveWrongDirection()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('C2', 'C4');
+        $this->game->gameMove('C4', 'C3');
+    }
+
+    public function testWhiteVsBlackMove()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('C2', 'C4');
+        $this->game->gameMove('C7', 'C5');
+        $this->game->gameMove('C5', 'C4');
+    }
+
+    public function testBlackMoveOneCase()
+    {
+        $this->game->gameMove('C7', 'C6');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C6'));
+    }
+
+
+    public function testWhiteOneMovePieceAlreadyHere()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('B2', 'B3');
+    }
+
+    public function testBlackOneMovePieceAlreadyHere()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('B7', 'B6');
+    }
+
+    public function testWhiteMoveTwicePieceBetween()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('B2', 'B4');
+    }
+
+    public function testBlackMoveTwicePieceBetween()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('B7', 'B5');
+    }
+
+    public function testWhiteDiagonalMoveWithoutCatch()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('C2', 'D3');
+    }
+
+    public function testWhiteDiagonalMoveNotFreeCase()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('B2', 'A3');
+    }
+
+    public function testWhiteDiagonalMoveWithCatch()
+    {
+        $this->game->gameMove('B2', 'C3');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C3'));
+    }
+
+    // TODO :
+    // prise en passant
+    // promotion
 }
