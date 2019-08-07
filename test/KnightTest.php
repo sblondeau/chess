@@ -23,7 +23,7 @@ class KnightTest extends TestCase
             'A1' => [Tower::class, 'white'],
             'B2' => [Tower::class, 'white'],
             'C2' => [Bishop::class, 'white'],
-            'C3' => [Bishop::class, 'white'],
+            'C3' => [Bishop::class, 'black'],
             'D6' => [Bishop::class, 'black'],
             'G1' => [Knight::class, 'white'],
             'B8' => [Knight::class, 'black'],

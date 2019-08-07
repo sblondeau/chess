@@ -20,44 +20,24 @@ class ChessBoard
         ChessBoardInitializer::initPieces($this, $pieces);
     }
 
-    public static function getColumns(): array
+    public static function caseExists(string $coords): bool
     {
-        return range(self::COLUMN_START, self::COLUMN_END);
-    }
-
-    public static function getRows(): array
-    {
-        return range(self::ROW_START, self::ROW_END);
-    }
-
-    public function setPiece(string $coords, Piece $piece) {
-        [$col, $row] = self::checkCoordinate($coords);
-        $this->cases[$col][$row] = $piece;
+        return preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
+            $coords);
     }
 
     public function addPiece(string $coords, Piece $piece): self
     {
-        if(!$piece->isMoveValid($this, $coords) || !$this->isFreeCase($piece, $coords)) {
+        if (!$piece->isMoveValid($this, $coords) || !$this->isFreeCase($piece, $coords)) {
             throw new \LogicException('Wrong move');
         }
 
         $this->setPiece($coords, $piece);
+
         return $this;
     }
 
-    public function searchPiece(Piece $piece) :?string
-    {
-        foreach(self::getColumns() as $column) {
-            foreach (self::getRows() as $row) {
-                if($piece === $this->getPiece($column.$row)) {
-                    $coords = $column.$row;
-                }
-            }
-        }
-        return $coords ?? null;
-    }
-
-    public function isFreeCase(Piece $piece, string $destination) :bool
+    public function isFreeCase(Piece $piece, string $destination): bool
     {
         return $this->getPiece($destination) === null ||
             ($this->getPiece($destination) instanceof Piece &&
@@ -65,10 +45,17 @@ class ChessBoard
             );
     }
 
+    public function getPiece(string $coords): ?Piece
+    {
+        [$col, $row] = self::checkCoordinate($coords);
+
+        return $this->getCases()[$col][$row];
+    }
+
     public static function checkCoordinate(?string $coords)
     {
         if (
-            preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
+        preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
             $coords, $matches)
         ) {
             $col = $matches[1];
@@ -78,13 +65,6 @@ class ChessBoard
         }
 
         return [$col, $row];
-    }
-
-    public function getPiece(string $coords): ?Piece
-    {
-        [$col, $row] = self::checkCoordinate($coords);
-
-        return $this->getCases()[$col][$row];
     }
 
     /**
@@ -104,6 +84,35 @@ class ChessBoard
         $this->cases = $cases;
 
         return $this;
+    }
+
+    public function setPiece(string $coords, Piece $piece)
+    {
+        [$col, $row] = self::checkCoordinate($coords);
+        $this->cases[$col][$row] = $piece;
+    }
+
+    public function searchPiece(Piece $piece): ?string
+    {
+        foreach (self::getColumns() as $column) {
+            foreach (self::getRows() as $row) {
+                if ($piece === $this->getPiece($column . $row)) {
+                    $coords = $column . $row;
+                }
+            }
+        }
+
+        return $coords ?? null;
+    }
+
+    public static function getColumns(): array
+    {
+        return range(self::COLUMN_START, self::COLUMN_END);
+    }
+
+    public static function getRows(): array
+    {
+        return range(self::ROW_START, self::ROW_END);
     }
 
 
