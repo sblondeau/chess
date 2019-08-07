@@ -25,7 +25,7 @@ class Game
             throw new \LogicException('No piece at coordinate ' . $start);
         }
         $this->chessBoard->addPiece($end, $piece);
-
+        $this->chessBoard->setPiece($start, null);
         return $this;
     }
 

@@ -23,7 +23,6 @@ class KnightTest extends TestCase
             'A1' => [Tower::class, 'white'],
             'B2' => [Tower::class, 'white'],
             'C2' => [Bishop::class, 'white'],
-            'C3' => [Bishop::class, 'black'],
             'D6' => [Bishop::class, 'black'],
             'G1' => [Knight::class, 'white'],
             'B8' => [Knight::class, 'black'],
@@ -36,14 +35,14 @@ class KnightTest extends TestCase
 
     public function testMoves()
     {
-        $this->game->gameMove('B1', 'B3');
-        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('B3'));
-        $this->game->gameMove('B3', 'B5');
+        $this->game->gameMove('B1', 'C3');
+        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('C3'));
+        $this->game->gameMove('C3', 'B5');
         $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('B5'));
-        $this->game->gameMove('B5', 'D5');
-        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('D5'));
-        $this->game->gameMove('D5', 'B4');
-        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('B4'));
+        $this->game->gameMove('B5', 'D4');
+        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('D4'));
+        $this->game->gameMove('D4', 'F3');
+        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('F3'));
     }
 
     public function testJumbMove()
@@ -57,7 +56,8 @@ class KnightTest extends TestCase
         $this->assertEquals('black', $this->game->getChessBoard()->getPiece('D6')->getColor());
         $this->assertInstanceOf(Bishop::class, $this->game->getChessBoard()->getPiece('D6'));
         $this->game->gameMove('B1', 'C3');
-        $this->game->gameMove('B1', 'D6');
+        $this->game->gameMove('C3', 'E4');
+        $this->game->gameMove('E4', 'D6');
         $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('D6'));
         $this->assertEquals('white', $this->game->getChessBoard()->getPiece('D6')->getColor());
     }
@@ -71,8 +71,8 @@ class KnightTest extends TestCase
     public function testNotFreeCaseMove()
     {
         $this->expectException(\LogicException::class);
-        $this->game->gameMove('B1', 'C3');
-        $this->game->gameMove('C3', 'E2');
-        $this->game->gameMove('E2', 'C1');
+        $this->game->gameMove('B1', 'A3');
+        $this->game->gameMove('A3', 'C2');
+        $this->game->gameMove('C2', 'A1');
     }
 }

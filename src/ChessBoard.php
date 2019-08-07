@@ -86,7 +86,7 @@ class ChessBoard
         return $this;
     }
 
-    public function setPiece(string $coords, Piece $piece)
+    public function setPiece(string $coords, ?Piece $piece)
     {
         [$col, $row] = self::checkCoordinate($coords);
         $this->cases[$col][$row] = $piece;
