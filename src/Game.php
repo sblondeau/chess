@@ -7,16 +7,18 @@ namespace App;
 class Game
 {
     private $chessBoard;
+    private $movesRecording;
 
     public function __construct(ChessBoard $chessBoard)
     {
         $this->chessBoard = $chessBoard;
+        $this->movesRecording = new MovesRecording();
     }
 
     // TODO
-    // - reine, pions, cavalier, roi
+    // roi
     // gestion de l'échec
-    // prise en passant, roque, promotion
+    // roque, promotion
 
     public function gameMove(string $start, string $end) :self
     {
@@ -24,8 +26,11 @@ class Game
         if(!$piece instanceof Piece) {
             throw new \LogicException('No piece at coordinate ' . $start);
         }
-        $this->chessBoard->addPiece($end, $piece);
+        $this->chessBoard->addPiece($end, $piece, $this->movesRecording);
         $this->chessBoard->setPiece($start, null);
+
+        $this->movesRecording->record($piece, $start, $end);
+
         return $this;
     }
 

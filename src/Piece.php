@@ -38,15 +38,15 @@ abstract class Piece
         return $this;
     }
 
-    abstract public function authorizedCase(ChessBoard $chessBoard) :array;
+    abstract public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording) :array;
 
-    public function isMoveValid(ChessBoard $chessBoard, string $destination) :bool
+    public function isMoveValid(ChessBoard $chessBoard, string $destination, MovesRecording $movesRecording) :bool
     {
         // TODO si la pièce bouge, il ne faut pas que ça mette son propre roi en échec (cas d'une protection par la piece)
         // tester donc d'enlever la piece (sauvegarder et mettre position à null sur le chessboard, verifier que isChess() à false et "readder" la piece;
         // si c'est bon, on move, sinon on empeche et leve une exception "impossible car met le roi en echec"
 
-        return in_array($destination, $this->authorizedCase($chessBoard));
+        return in_array($destination, $this->authorizedCase($chessBoard, $movesRecording));
     }
 
     /**

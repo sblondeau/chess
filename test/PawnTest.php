@@ -24,11 +24,12 @@ class PawnTest extends TestCase
             'D2' => [Pawn::class, 'white'],
             'A3' => [Knight::class, 'white'],
             'B3' => [Knight::class, 'black'],
-            'C3' => [Knight::class, 'black'],
             'A7' => [Pawn::class, 'black'],
             'B7' => [Pawn::class, 'black'],
             'C7' => [Pawn::class, 'black'],
             'B6' => [Knight::class, 'white'],
+            'G5' => [Pawn::class, 'white'],
+            'H7' => [Pawn::class, 'black'],
         ];
 
         $this->chessboard = new ChessBoard($smallChessBoard);
@@ -129,11 +130,33 @@ class PawnTest extends TestCase
 
     public function testWhiteDiagonalMoveWithCatch()
     {
-        $this->game->gameMove('B2', 'C3');
-        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('C3'));
+        $this->game->gameMove('A2', 'B3');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('B3'));
+    }
+
+    public function testWrongEnPassant()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('H7', 'H6');
+        $this->game->gameMove('H6', 'H5');
+        $this->game->gameMove('G5', 'H6');
+    }
+
+    public function testEnPassant()
+    {
+        $this->game->gameMove('H7', 'H5');
+        $this->game->gameMove('G5', 'H6');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('H6'));
+    }
+    public function testEnPassantTooLate()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('H7', 'H5');
+        $this->game->gameMove('D2', 'D3');
+        $this->game->gameMove('A7', 'A6');
+        $this->game->gameMove('G5', 'H6');
     }
 
     // TODO :
-    // prise en passant
     // promotion
 }

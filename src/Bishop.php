@@ -19,7 +19,7 @@ class Bishop extends Piece
         $this->color = $color;
     }
 
-    public function authorizedCase(ChessBoard $chessBoard): array
+    public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording): array
     {
         [$colStart, $rowStart] = $chessBoard::checkCoordinate($chessBoard->searchPiece($this));
         $cases = $this->checkDiagonals($chessBoard, $colStart, $rowStart);

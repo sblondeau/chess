@@ -35,8 +35,15 @@ class GameTest extends TestCase
 
     public function testCatchPiece()
     {
-        $this->assertEquals('black', $this->game->getChessBoard()->getPiece('A8')->getColor());
-        $this->game->gameMove('A1', 'A8');
-        $this->assertEquals('white', $this->game->getChessBoard()->getPiece('A8')->getColor());
+        $this->game
+            ->gameMove('A2', 'A4')
+            ->gameMove('A7', 'A5')
+            ->gameMove('A1','A3')
+            ->gameMove('A8','A6')
+            ->gameMove('A3','B3')
+            ->gameMove('A6','B6');
+        $this->assertEquals('black', $this->game->getChessBoard()->getPiece('B6')->getColor());
+        $this->game->gameMove('B3', 'B6');
+        $this->assertEquals('white', $this->game->getChessBoard()->getPiece('B6')->getColor());
     }
 }
