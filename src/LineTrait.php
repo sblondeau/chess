@@ -12,12 +12,14 @@ Trait LineTrait
         for ($increment = -1; $increment <= 1; $increment += 2) {
             for ($col = $colStartNumber + $increment; $col >= ChessBoard::ROW_START && $col <= ChessBoard::ROW_END; $col += $increment) {
                 $case = ChessBoard::getColumns()[$col-1] . $rowStart;
-                if ($chessBoard->isFreeCase($this, $case)) {
+                if ($chessBoard->isEmptyCase($case)) {
                     $cases[] = $case;
+                } elseif($chessBoard->getPiece($case)->getColor() !== $this->getColor()) {
+                    $cases[] = $case;
+                    break;
                 } else {
                     break;
-                }
-            }
+                }            }
         }
 
         return $cases ?? [];

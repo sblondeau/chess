@@ -40,7 +40,7 @@ class Pawn extends Piece
 
         $diagonalCases = $this->diagonalCatch($chessBoard, $colStartNumber, $rowStart);
 
-        $enPassantCase = $this->enPassant($chessBoard, $colStart . $rowStart);
+        $enPassantCase = $this->enPassant($chessBoard);
 
         $cases = array_merge($cases ?? [], $diagonalCases, $enPassantCase);
 

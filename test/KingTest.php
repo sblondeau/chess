@@ -4,10 +4,12 @@
 namespace Test;
 
 
+use App\Bishop;
 use App\ChessBoard;
 use App\Game;
 use App\King;
 use App\Pawn;
+use App\Tower;
 use PHPUnit\Framework\TestCase;
 
 class KingTest extends TestCase
@@ -22,6 +24,8 @@ class KingTest extends TestCase
             'F1' => [Pawn::class, 'black'],
             'E8' => [King::class, 'black'],
             'D4' => [Pawn::class, 'white'],
+            'H5' => [Bishop::class, 'white'],
+            'G6' => [Pawn::class, 'black'],
         ];
 
         $this->chessboard = new ChessBoard($smallChessBoard);

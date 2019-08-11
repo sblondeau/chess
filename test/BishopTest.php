@@ -22,6 +22,7 @@ class BishopTest extends TestCase
             'E3' => [Tower::class, 'white'],
             'F1' => [Bishop::class, 'white'],
             'C8' => [Bishop::class, 'black'],
+            'C5' => [Bishop::class, 'black'],
             'F8' => [Bishop::class, 'black'],
         ];
 
@@ -64,6 +65,24 @@ class BishopTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->game->gameMove('C1', 'D2');
         $this->game->gameMove('D2', 'F4');
+    }
+
+    public function testImpossibleCatchPieceBetween()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('C1', 'A3');
+        $this->game->gameMove('A3', 'F8');
+    }
+
+    public function testCatch()
+    {
+        $this->assertEquals('black', $this->game->getChessBoard()->getPiece('F8')->getColor());
+        $this->game->gameMove('C1', 'A3');
+        $this->game->gameMove('A3', 'C5');
+        $this->game->gameMove('C5', 'F8');
+        $this->assertInstanceOf(Bishop::class, $this->game->getChessBoard()->getPiece('F8'));
+        $this->assertEquals('white', $this->game->getChessBoard()->getPiece('F8')->getColor());
+
     }
 
 }
