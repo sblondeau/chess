@@ -20,7 +20,7 @@ class Queen extends Piece
         $this->color = $color;
     }
 
-    public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording): array
+    public function authorizedCase(ChessBoard $chessBoard): array
     {
         [$colStart, $rowStart] = $chessBoard::checkCoordinate($chessBoard->searchPiece($this));
 

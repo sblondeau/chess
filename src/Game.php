@@ -17,11 +17,12 @@ class Game
         $this->chessBoard = $chessBoard;
         $this->movesRecording = new MovesRecording();
         $this->player = 'white';
-        // TODO $this->chessBoard->setMoveRecording($this->moveRecording);
+        $this->chessBoard->setMovesRecording($this->movesRecording);
     }
 
     // TODO
     // roque, promotion
+
 
     public function gameMove(string $start, string $end) :self
     {
@@ -35,7 +36,7 @@ class Game
         if($this->chessBoard->searchKing($this->player) && $this->checkIfInCheckAfterMove($piece, $start, $end)) {
             throw new \LogicException('Forbidden move (king in check)');
         }
-        $this->chessBoard->addPiece($end, $piece, $this->movesRecording);
+        $this->chessBoard->addPiece($end, $piece);
         $this->chessBoard->setPiece($start, null);
 
         $this->movesRecording->record($piece, $start, $end);

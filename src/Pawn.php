@@ -19,7 +19,7 @@ class Pawn extends Piece
         $this->color = $color;
     }
 
-    public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording): array
+    public function authorizedCase(ChessBoard $chessBoard): array
     {
         [$colStart, $rowStart] = $chessBoard::checkCoordinate($chessBoard->searchPiece($this));
         $colStartNumber = array_search($colStart, ChessBoard::getColumns()) + 1;
@@ -38,16 +38,16 @@ class Pawn extends Piece
             $cases[] = $doubleMoveCase;
         }
 
-        $diagonalCases = $this->diagonalCatch($chessBoard, $colStartNumber, $rowStart, $movesRecording);
+        $diagonalCases = $this->diagonalCatch($chessBoard, $colStartNumber, $rowStart);
 
-        $enPassantCase = $this->enPassant($chessBoard, $colStart . $rowStart, $movesRecording);
+        $enPassantCase = $this->enPassant($chessBoard, $colStart . $rowStart);
 
         $cases = array_merge($cases ?? [], $diagonalCases, $enPassantCase);
 
         return $cases ?? [];
     }
 
-    private function diagonalCatch(ChessBoard $chessBoard, int $colStartNumber, int $rowStart, MovesRecording $movesRecording)
+    private function diagonalCatch(ChessBoard $chessBoard, int $colStartNumber, int $rowStart)
     {
         for ($i = -1; $i <= 1; $i += 2) {
             $diagonalCaseCoords = (ChessBoard::getColumns()[$colStartNumber - 1 + $i] ?? '') . ($rowStart + self::COLORS[$this->getColor()]);
@@ -62,9 +62,9 @@ class Pawn extends Piece
         return $cases ?? [];
     }
 
-    private function enPassant(ChessBoard $chessBoard, string $case, MovesRecording $movesRecording)
+    private function enPassant(ChessBoard $chessBoard)
     {
-        $lastMove = $movesRecording->last();
+        $lastMove = $chessBoard->getMovesRecording()->last();
         if ($lastMove && $lastMove[0] instanceof Pawn) {
             $rightCase = ChessBoard::getNextCase($lastMove[2], 'right');
             $leftCase = ChessBoard::getNextCase($lastMove[2], 'left');

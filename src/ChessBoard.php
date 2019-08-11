@@ -13,12 +13,26 @@ class ChessBoard
     const ROW_END = 8;
 
     private $cases;
+    private $movesRecording;
 
     public function __construct(array $pieces = ChessBoardInitializer::CLASSIC_CHESSBOARD)
     {
         ChessBoardInitializer::initBoard($this);
         ChessBoardInitializer::initPieces($this, $pieces);
     }
+
+    public function setMovesRecording(MovesRecording $movesRecording) {
+        $this->movesRecording = $movesRecording;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMovesRecording()
+    {
+        return $this->movesRecording;
+    }
+
 
     public static function getNextCase(string $coords, string $direction): ?string
     {
@@ -55,9 +69,9 @@ class ChessBoard
         return $nextCaseCoords ?? null;
     }
 
-    public function addPiece(string $coords, Piece $piece, MovesRecording $movesRecording): self
+    public function addPiece(string $coords, Piece $piece): self
     {
-        if (!$piece->isMoveValid($this, $coords, $movesRecording) || !$this->isFreeCase($piece, $coords)) {
+        if (!$piece->isMoveValid($this, $coords) || !$this->isFreeCase($piece, $coords)) {
             throw new \LogicException('Wrong move');
         }
 

@@ -20,7 +20,7 @@ class King extends Piece
         $this->color = $color;
     }
 
-    public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording): array
+    public function authorizedCase(ChessBoard $chessBoard): array
     {
         $cases = $this->kingCaseIgnoringInCheck($chessBoard);
         return $cases ?? [];
