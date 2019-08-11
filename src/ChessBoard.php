@@ -145,6 +145,20 @@ class ChessBoard
         return $coords ?? null;
     }
 
+    public function searchKing(string $color) :?string
+    {
+        foreach (self::getColumns() as $column) {
+            foreach (self::getRows() as $row) {
+                if ($this->getPiece($column . $row) instanceof King &&
+                    $this->getPiece($column . $row)->getColor() === $color) {
+                    $kingCoords = $column . $row;
+                }
+            }
+        }
+
+        return $kingCoords ?? null;
+    }
+
     public static function getColumns(): array
     {
         return range(self::COLUMN_START, self::COLUMN_END);
@@ -154,5 +168,6 @@ class ChessBoard
     {
         return range(self::ROW_START, self::ROW_END);
     }
+
 
 }

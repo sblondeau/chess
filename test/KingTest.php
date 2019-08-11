@@ -4,10 +4,10 @@
 namespace Test;
 
 
-use App\Bishop;
 use App\ChessBoard;
 use App\Game;
 use App\King;
+use App\Pawn;
 use PHPUnit\Framework\TestCase;
 
 class KingTest extends TestCase
@@ -19,8 +19,9 @@ class KingTest extends TestCase
     {
         $smallChessBoard = [
             'E1' => [King::class, 'white'],
-            'F1' => [Bishop::class, 'black'],
+            'F1' => [Pawn::class, 'black'],
             'E8' => [King::class, 'black'],
+            'D4' => [Pawn::class, 'white'],
         ];
 
         $this->chessboard = new ChessBoard($smallChessBoard);
@@ -62,6 +63,15 @@ class KingTest extends TestCase
         $this->game->gameMove('E1', 'F1');
         $this->assertInstanceOf(King::class, $this->game->getChessBoard()->getPiece('F1'));
         $this->assertEquals('white', $this->game->getChessBoard()->getPiece('F1')->getColor());
+    }
+
+    public function testMoveInCheck() {
+        $this->expectException(\LogicException::class);
+        $this->game
+            ->gameMove('E8', 'E7')
+            ->gameMove('E7','E6')
+            ->gameMove('E6','E5')
+        ;
     }
 
     public function testNotAuthorizedMove()

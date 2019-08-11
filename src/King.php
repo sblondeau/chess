@@ -9,7 +9,7 @@ class King extends Piece
     /**
      * @var string
      */
-    const NAME = 'queen';
+    const NAME = 'king';
 
     use LineTrait;
     use DiagonalTrait;
@@ -22,9 +22,20 @@ class King extends Piece
 
     public function authorizedCase(ChessBoard $chessBoard, MovesRecording $movesRecording): array
     {
+        $cases = $this->kingCaseIgnoringInCheck($chessBoard);
+        return $cases ?? [];
+    }
+
+
+    /** Possibility to get "only" available cases around a king (ignoring forbidden case involving in "in check") to avoid recursive checking between the two king
+     * i
+     * @param ChessBoard $chessBoard
+     * @return array
+     */
+    public function kingCaseIgnoringInCheck(ChessBoard $chessBoard)
+    {
         [$colStart, $rowStart] = $chessBoard::checkCoordinate($chessBoard->searchPiece($this));
         $colStartNumber = array_search($colStart, ChessBoard::getColumns()) + 1;
-
         for ($i = -1; $i <= 1; $i++) {
             $col = $colStartNumber + $i;
             for ($j = -1; $j <= 1; $j++) {
@@ -34,5 +45,7 @@ class King extends Piece
 
         return $cases ?? [];
     }
+
+
 
 }
