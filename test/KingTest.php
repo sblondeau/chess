@@ -22,6 +22,7 @@ class KingTest extends TestCase
         $smallChessBoard = [
             'E1' => [King::class, 'white'],
             'F1' => [Pawn::class, 'black'],
+            'H7' => [Pawn::class, 'black'],
             'E8' => [King::class, 'black'],
             'D4' => [Pawn::class, 'white'],
             'H5' => [Bishop::class, 'white'],
@@ -82,5 +83,12 @@ class KingTest extends TestCase
     {
         $this->expectException(\LogicException::class);
         $this->game->gameMove('E1', 'H5');
+    }
+
+    public function testShouldMoveKingInCheck()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('H5', 'G6');
+        $this->game->gameMove('H7', 'H6');
     }
 }

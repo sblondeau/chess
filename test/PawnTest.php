@@ -4,10 +4,12 @@
 namespace Test;
 
 
+use App\Bishop;
 use App\ChessBoard;
 use App\Game;
 use App\Knight;
 use App\Pawn;
+use App\Queen;
 use PHPUnit\Framework\TestCase;
 
 class PawnTest extends TestCase
@@ -22,11 +24,13 @@ class PawnTest extends TestCase
             'B2' => [Pawn::class, 'white'],
             'C2' => [Pawn::class, 'white'],
             'D2' => [Pawn::class, 'white'],
+            'E2' => [Pawn::class, 'black'],
             'A3' => [Knight::class, 'white'],
             'B3' => [Knight::class, 'black'],
             'A7' => [Pawn::class, 'black'],
             'B7' => [Pawn::class, 'black'],
             'C7' => [Pawn::class, 'black'],
+            'E7' => [Pawn::class, 'white'],
             'B6' => [Knight::class, 'white'],
             'G5' => [Pawn::class, 'white'],
             'H7' => [Pawn::class, 'black'],
@@ -157,6 +161,45 @@ class PawnTest extends TestCase
         $this->game->gameMove('G5', 'H6');
     }
 
-    // TODO :
-    // promotion
+    public function testWrongPromotion()
+    {
+        $this->expectException(\LogicException::class);
+        $pawn = $this->game->getChessBoard()->getPiece('E7');
+        $this->game->promote($pawn, Queen::class);
+    }
+
+    public function testWrongPromotionPiece()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game->gameMove('E7', 'E8');
+        $pawn = $this->game->getChessBoard()->getPiece('E8');
+        $this->game->promote($pawn, Pawn::class);
+    }
+
+    public function testWhitePromotion()
+    {
+        $this->game->gameMove('E7', 'E8');
+        $pawn = $this->game->getChessBoard()->getPiece('E8');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('E8'));
+        $this->game->promote($pawn, Queen::class);
+        $this->assertInstanceOf(Queen::class, $this->game->getChessBoard()->getPiece('E8'));
+    }
+
+    public function testBlackPromotion()
+    {
+        $this->game->gameMove('E2', 'E1');
+        $pawn = $this->game->getChessBoard()->getPiece('E1');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('E1'));
+        $this->game->promote($pawn, Queen::class);
+        $this->assertInstanceOf(Queen::class, $this->game->getChessBoard()->getPiece('E1'));
+    }
+
+    public function testWhitePromotionKnight()
+    {
+        $this->game->gameMove('E7', 'E8');
+        $pawn = $this->game->getChessBoard()->getPiece('E8');
+        $this->assertInstanceOf(Pawn::class, $this->game->getChessBoard()->getPiece('E8'));
+        $this->game->promote($pawn, Knight::class);
+        $this->assertInstanceOf(Knight::class, $this->game->getChessBoard()->getPiece('E8'));
+    }
 }

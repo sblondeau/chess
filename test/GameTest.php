@@ -19,7 +19,7 @@ class GameTest extends TestCase
     public function setUp(): void
     {
         $this->chessboard = new ChessBoard();
-        $this->game = new Game($this->chessboard);
+        $this->game = new Game($this->chessboard, true);
     }
 
     public function testNotFreeCaseMove()
@@ -52,7 +52,9 @@ class GameTest extends TestCase
     {
         $this->game
             ->gameMove('G2', 'G3')
+            ->gameMove('A7', 'A6')
             ->gameMove('F1', 'H3')
+            ->gameMove('A6', 'A5')
             ->gameMove('G1', 'F3');
         $this->game->roque('small');
         $this->assertInstanceOf(Tower::class, $this->game->getChessBoard()->getPiece('F1'));
@@ -88,8 +90,7 @@ class GameTest extends TestCase
             ->gameMove('G2', 'G3')
             ->gameMove('F1', 'H3')
             ->gameMove('G1', 'F3')
-            ->gameMove('E1', 'F1')
-        ;
+            ->gameMove('E1', 'F1');
         $this->game->roque('small');
     }
 
@@ -102,8 +103,7 @@ class GameTest extends TestCase
             ->gameMove('F1', 'H3')
             ->gameMove('G1', 'F3')
             ->gameMove('E1', 'F1')
-            ->gameMove('F1', 'E1')
-        ;
+            ->gameMove('F1', 'E1');
         $this->game->roque('small');
     }
 
@@ -113,17 +113,38 @@ class GameTest extends TestCase
 
         $this->game->roque('big');
     }
+
     public function testBigBlackRoque()
     {
         $this->game
             ->gameMove('B7', 'B6')
+            ->gameMove('A2', 'A3')
             ->gameMove('C8', 'A6')
+            ->gameMove('A3', 'A4')
             ->gameMove('B8', 'C6')
+            ->gameMove('A4', 'A5')
             ->gameMove('D7', 'D6')
-            ->gameMove('D8', 'D7')
-        ;
+            ->gameMove('H2', 'H3')
+            ->gameMove('D8', 'D7');
         $this->game->roque('big', 'black');
         $this->assertInstanceOf(Tower::class, $this->game->getChessBoard()->getPiece('D8'));
         $this->assertInstanceOf(King::class, $this->game->getChessBoard()->getPiece('C8'));
+    }
+
+    public function testStrictPlayerSwitchWhiteWrong()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game
+            ->gameMove('A2','A4')
+            ->gameMove('A4','A5')
+        ;
+    }
+    public function testStrictPlayerSwitchBlackWrong()
+    {
+        $this->expectException(\LogicException::class);
+        $this->game
+            ->gameMove('A7','A6')
+            ->gameMove('A6','A5')
+        ;
     }
 }
