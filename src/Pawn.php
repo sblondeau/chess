@@ -11,12 +11,12 @@ class Pawn extends Piece
      */
     const NAME = 'pawn';
     const COLORS = ['white' => 1, 'black' => -1];
+    const SYMBOL = ['white'=>'♙', 'black'=>'♟'];
 
 
     public function __construct(string $color)
     {
-        parent::__construct(self::NAME, $color);
-        $this->color = $color;
+        parent::__construct(self::NAME, $color, self::SYMBOL[$color]);
     }
 
     public function authorizedCase(ChessBoard $chessBoard): array
@@ -41,7 +41,7 @@ class Pawn extends Piece
         $diagonalCases = $this->diagonalCatch($chessBoard, $colStartNumber, $rowStart);
 
         $enPassantCase = $this->enPassant($chessBoard);
-
+        //TODO fix: if enpassant, remove the opposite pawn (top or bottom)
         $cases = array_merge($cases ?? [], $diagonalCases, $enPassantCase);
 
         return $cases ?? [];

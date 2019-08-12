@@ -10,13 +10,14 @@ abstract class Piece
      * @var string
      */
     protected $name;
-
+    protected $symbol;
     protected $color;
 
-    public function __construct(string $name, string $color)
+    public function __construct(string $name, string $color, string $symbol)
     {
         $this->name = $name;
         $this->color = $color;
+        $this->symbol = $symbol;
     }
 
     /**
@@ -63,6 +64,27 @@ abstract class Piece
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getSymbol(): string
+    {
+        return $this->symbol;
+    }
+
+    /**
+     * @param string $symbol
+     * @return Piece
+     */
+    public function setSymbol(string $symbol): Piece
+    {
+        $this->symbol = $symbol;
+
+        return $this;
+    }
+
+
 
 
 }

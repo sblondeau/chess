@@ -183,5 +183,17 @@ class ChessBoard
         return range(self::ROW_START, self::ROW_END);
     }
 
+    public function render() :array
+    {
+        foreach ($this->getCases() as $col=>$cases) {
+            krsort($cases);
+            foreach ($cases as $row=>$piece) {
+                $render[$col.$row] = $piece;
+            }
+        }
+
+        return $render;
+    }
+
 
 }

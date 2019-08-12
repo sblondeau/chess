@@ -10,13 +10,13 @@ class Bishop extends Piece
      * @var string
      */
     const NAME = 'bishop';
+    const SYMBOL = ['white'=>'♗', 'black'=>'♝'];
 
     use DiagonalTrait;
 
     public function __construct(string $color)
     {
-        parent::__construct(self::NAME, $color);
-        $this->color = $color;
+        parent::__construct(self::NAME, $color, self::SYMBOL[$color]);
     }
 
     public function authorizedCase(ChessBoard $chessBoard): array

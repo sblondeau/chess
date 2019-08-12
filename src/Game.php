@@ -16,10 +16,13 @@ class Game
     private $player;
     private $strictPlayerSwitch;
 
-    public function __construct(ChessBoard $chessBoard, bool $strictPlayerSwitch = false)
+    public function __construct(ChessBoard $chessBoard, bool $strictPlayerSwitch = false, ?MovesRecording $movesRecording = null)
     {
         $this->chessBoard = $chessBoard;
-        $this->movesRecording = new MovesRecording();
+        if ($movesRecording === null) {
+            $movesRecording  = new MovesRecording();
+        }
+        $this->movesRecording = $movesRecording;
         $this->player = 'white';
         $this->strictPlayerSwitch = $strictPlayerSwitch;
         $this->getChessBoard()->setMovesRecording($this->movesRecording);
@@ -187,5 +190,14 @@ class Game
             throw new \LogicException('Impossible to promote this pawn');
         }
     }
+
+    /**
+     * @return MovesRecording
+     */
+    public function getMovesRecording(): MovesRecording
+    {
+        return $this->movesRecording;
+    }
+
 
 }

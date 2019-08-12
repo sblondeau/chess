@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chess</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Chess</h1>
+<a href="?reset=reset">Reset</a>
+
+<label for="switch">Switch</label>
+<label for="threed">3D</label>
+
+<h2>Moves</h2>
+<ul>
+    {% for move in moves %}
+        <li>{{ move[0].name }} : {{ move[1] }} -> {{ move[2] }}</li>
+    {% endfor %}
+</ul>
+
+<div class="container">
+    <div class="error">{{ error }}</div>
+    <input hidden type="checkbox" id="switch"/>
+
+    <input hidden type="checkbox" id="threed"/>
+
+    <div class="chessboard">
+
+        {% for coord, piece in chessboard %}
+            {% if loop.index0 % 8 == 0 %}
+                <div class="nothing"></div>{% endif %}
+            <div class="case {{ start == coord ? 'start' : '' }}">
+                <a href="?start={{ start ?? coord }}{{ start ? '&end=' ~ coord }}">
+                    <div data-name="{{ piece.name }}"
+                         class="{{ piece.name ? piece.color ~ ' piece ' ~ piece.name  : '' }}">{{ piece.symbol }}</div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

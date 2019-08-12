@@ -41,6 +41,21 @@ class ChessBoardInitializer
 
     ];
 
+
+    /** Useful for convert an array from chessboard->render() to the format of array of ChessBoardInitializer
+     * @param array $pieces
+     */
+    public static function createInitFromPieces(array $pieces) :array
+    {
+        foreach($pieces as $coord=>$piece) {
+            if ($piece instanceof Piece) {
+                $initializedPieces[$coord] = [get_class($piece), $piece->getColor()];
+            }
+        }
+
+        return $initializedPieces;
+    }
+
     public static function initBoard(ChessBoard $chessboard): void
     {
         foreach ($chessboard::getColumns() as $column) {

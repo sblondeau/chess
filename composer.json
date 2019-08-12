@@ -1,10 +1,7 @@
 {
     "name": "sylvain/chess",
-    "description": "Chess Checker",
-    "type": "project",
+    "description": "Chess game checker",
     "require": {
-        "phpunit/phpunit": "^8.2",
-        "squizlabs/php_codesniffer": "^3.4",
         "twig/twig": "^2.11"
     },
     "license": "GPL3",
