@@ -15,18 +15,12 @@
 <label for="switch">Switch</label>
 <label for="threed">3D</label>
 
-<h2>Moves</h2>
-<ul>
-    {% for move in moves %}
-        <li>{{ move[0].name }} : {{ move[1] }} -> {{ move[2] }}</li>
-    {% endfor %}
-</ul>
 
 <div class="container">
     <div class="error">{{ error }}</div>
     <input hidden type="checkbox" id="switch"/>
-
     <input hidden type="checkbox" id="threed"/>
+
 
     <div class="chessboard">
 
@@ -41,6 +35,16 @@
             </div>
         {% endfor %}
     </div>
+
+    <div class="moves">
+        <h2>Moves</h2>
+        <ul>
+            {% for move in movesRecording.moves %}
+                <li>{{ move[0].symbol }} : {{ move[1] }} -> {{ move[2] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
 </div>
 </body>
 </html>

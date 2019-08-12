@@ -48,7 +48,7 @@ class Game
 
         $this->player = $piece->getColor();
         if ($this->movesRecording->last() && $this->strictPlayerSwitch && $this->movesRecording->last()[0]->getColor() === $piece->getColor()) {
-            throw new \LogicException('It is ' . $this->player . ' round');
+            throw new \LogicException('It is not ' . $this->player . ' round');
         }
 
         if ($this->getChessBoard()->searchKing($this->player) && $this->checkIfInCheckAfterMove($piece, $start, $end)) {

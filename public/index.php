@@ -45,7 +45,7 @@ $_SESSION['movesRecording'] = $game->getMovesRecording();
 echo $twig->render('index.html.twig', [
         'error'      => $error ?? '',
         'start' => $start ?? null,
-        'moves' => $movesRecording,
+        'movesRecording' => $_SESSION['movesRecording'],
         'chessboard' => $chessboard->render(),
     ]
 );
