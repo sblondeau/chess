@@ -41,7 +41,6 @@ class Pawn extends Piece
         $diagonalCases = $this->diagonalCatch($chessBoard, $colStartNumber, $rowStart);
 
         $enPassantCase = $this->enPassant($chessBoard);
-        //TODO fix: if enpassant, remove the opposite pawn (top or bottom)
         $cases = array_merge($cases ?? [], $diagonalCases, $enPassantCase);
 
         return $cases ?? [];

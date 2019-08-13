@@ -20,7 +20,7 @@ class Game
     {
         $this->chessBoard = $chessBoard;
         if ($movesRecording === null) {
-            $movesRecording  = new MovesRecording();
+            $movesRecording = new MovesRecording();
         }
         $this->movesRecording = $movesRecording;
         $this->player = 'white';
@@ -29,10 +29,17 @@ class Game
     }
 
     // TODO
-    // refacto colors with constants
-    // render
-    // mat/pat
+    // refacto colors with constants (object player ?)
+    // mat/pat // no solution yet
+    // add roque/promote button in UI
 
+    /**
+     * @return ChessBoard
+     */
+    public function getChessBoard(): ChessBoard
+    {
+        return $this->chessBoard;
+    }
 
     /** Move a piece (if it exists and if move is possible for this piece) from start coord to end coord
      * @param string $start
@@ -56,6 +63,7 @@ class Game
         }
 
         $this->getChessBoard()->addPiece($end, $piece);
+
         $this->getChessBoard()->setPiece($start, null);
 
         $this->movesRecording->record($piece, $start, $end);
@@ -93,28 +101,26 @@ class Game
     {
         $kingCoords = $this->getChessBoard()->searchKing($this->player);
 
+        $allAuthorizedCases = $this->allAuthorizedCaseOfPlayer($this->player);
+
+        return in_array($kingCoords, $allAuthorizedCases);
+    }
+
+    private function allAuthorizedCaseOfPlayer(string $player)
+    {
         $allAuthorizedCases = [];
         for ($col = ChessBoard::ROW_START; $col <= ChessBoard::ROW_END; $col++) {
             for ($row = ChessBoard::ROW_START; $row <= ChessBoard::ROW_END; $row++) {
                 $colLetter = ChessBoard::getColumns()[$col - 1];
                 $piece = $this->getChessBoard()->getCases()[$colLetter][$row];
-                if ($piece instanceof Piece && $piece->getColor() !== $this->player) {
+                if ($piece instanceof Piece && $piece->getColor() !== $player) {
                     $allAuthorizedCases = array_merge($allAuthorizedCases, $piece->authorizedCase($this->getChessBoard()));
                 }
             }
         }
 
-        return in_array($kingCoords, $allAuthorizedCases);
+        return $allAuthorizedCases;
     }
-
-    /**
-     * @return ChessBoard
-     */
-    public function getChessBoard(): ChessBoard
-    {
-        return $this->chessBoard;
-    }
-
 
     /** Roque special move between King and Tower (big or small)
      * @param string $type
@@ -198,6 +204,5 @@ class Game
     {
         return $this->movesRecording;
     }
-
 
 }

@@ -21,10 +21,6 @@ class ChessBoard
         ChessBoardInitializer::initPieces($this, $pieces);
     }
 
-    public function setMovesRecording(MovesRecording $movesRecording) {
-        $this->movesRecording = $movesRecording;
-    }
-
     /**
      * @return mixed
      */
@@ -33,40 +29,9 @@ class ChessBoard
         return $this->movesRecording;
     }
 
-
-    public static function getNextCase(string $coords, string $direction): ?string
+    public function setMovesRecording(MovesRecording $movesRecording)
     {
-        if (!in_array($direction, ['up', 'down', 'left', 'right'])) {
-            throw new \LogicException('This direction is not allowed, accepted directions are "up", "down", "left" and "right"');
-        }
-        [$col, $row] = self::checkCoordinate($coords);
-        $colStartNumber = array_search($col, ChessBoard::getColumns()) + 1;
-
-        if ($direction === 'up') {
-            $row++;
-        }
-        if ($direction === 'down') {
-            $row--;
-        }
-        if ($direction === 'left') {
-            $colStartNumber--;
-        }
-        if ($direction === 'right') {
-            $colStartNumber++;
-        }
-        $col = ChessBoard::getColumns()[$colStartNumber - 1] ?? '';
-
-        if (
-        preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
-            $col.$row, $matches)
-        ) {
-            $col = $matches[1];
-            $row = (int)$matches[2];
-
-            $nextCaseCoords = $col.$row;
-        }
-
-        return $nextCaseCoords ?? null;
+        $this->movesRecording = $movesRecording;
     }
 
     public function addPiece(string $coords, Piece $piece): self
@@ -74,7 +39,7 @@ class ChessBoard
         if (!$piece->isMoveValid($this, $coords) || !$this->isFreeCase($piece, $coords)) {
             throw new \LogicException('Wrong move');
         }
-
+        $this->deletePawnIfEnPassant($coords, $piece);
         $this->setPiece($coords, $piece);
 
         return $this;
@@ -101,21 +66,6 @@ class ChessBoard
         return $this->getCases()[$col][$row];
     }
 
-    public static function checkCoordinate(?string $coords)
-    {
-        if (
-        preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
-            $coords, $matches)
-        ) {
-            $col = $matches[1];
-            $row = (int)$matches[2];
-        } else {
-            throw new \LogicException('This coordinate does\'nt exist');
-        }
-
-        return [$col, $row];
-    }
-
     /**
      * @return mixed
      */
@@ -135,10 +85,19 @@ class ChessBoard
         return $this;
     }
 
-    public function setPiece(string $coords, ?Piece $piece)
+    private function deletePawnIfEnPassant(string $coords, Piece $piece): void
     {
-        [$col, $row] = self::checkCoordinate($coords);
-        $this->cases[$col][$row] = $piece;
+        if (
+            $piece instanceof Pawn &&
+            $this->isEmptyCase($coords) &&
+            substr($this->searchPiece($piece), 0, 1) !== substr($coords, 0, 1)
+        ) {
+            $dir = 'up';
+            if (Pawn::COLORS[$piece->getColor()] == 1) {
+                $dir = 'down';
+            }
+            $this->setPiece(ChessBoard::getNextCase($coords, $dir), null);
+        }
     }
 
     public function isEmptyCase(string $coords): bool
@@ -159,7 +118,73 @@ class ChessBoard
         return $coords ?? null;
     }
 
-    public function searchKing(string $color) :?string
+    public static function getRows(): array
+    {
+        return range(self::ROW_START, self::ROW_END);
+    }
+
+    public function setPiece(string $coords, ?Piece $piece)
+    {
+        [$col, $row] = self::checkCoordinate($coords);
+        $this->cases[$col][$row] = $piece;
+    }
+
+    public static function getNextCase(string $coords, string $direction): ?string
+    {
+        if (!in_array($direction, ['up', 'down', 'left', 'right'])) {
+            throw new \LogicException('This direction is not allowed, accepted directions are "up", "down", "left" and "right"');
+        }
+        [$col, $row] = self::checkCoordinate($coords);
+        $colStartNumber = array_search($col, ChessBoard::getColumns()) + 1;
+
+        if ($direction === 'up') {
+            $row++;
+        }
+        if ($direction === 'down') {
+            $row--;
+        }
+        if ($direction === 'left') {
+            $colStartNumber--;
+        }
+        if ($direction === 'right') {
+            $colStartNumber++;
+        }
+        $col = ChessBoard::getColumns()[$colStartNumber - 1] ?? '';
+
+        if (
+        preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
+            $col . $row, $matches)
+        ) {
+            $col = $matches[1];
+            $row = (int)$matches[2];
+
+            $nextCaseCoords = $col . $row;
+        }
+
+        return $nextCaseCoords ?? null;
+    }
+
+    public static function checkCoordinate(?string $coords)
+    {
+        if (
+        preg_match('/^([' . self::COLUMN_START . '-' . self::COLUMN_END . '])([' . self::ROW_START . '-' . self::ROW_END . '])$/',
+            $coords, $matches)
+        ) {
+            $col = $matches[1];
+            $row = (int)$matches[2];
+        } else {
+            throw new \LogicException('This coordinate does\'nt exist');
+        }
+
+        return [$col, $row];
+    }
+
+    public static function getColumns(): array
+    {
+        return range(self::COLUMN_START, self::COLUMN_END);
+    }
+
+    public function searchKing(string $color): ?string
     {
         foreach (self::getColumns() as $column) {
             foreach (self::getRows() as $row) {
@@ -173,22 +198,12 @@ class ChessBoard
         return $kingCoords ?? null;
     }
 
-    public static function getColumns(): array
+    public function render(): array
     {
-        return range(self::COLUMN_START, self::COLUMN_END);
-    }
-
-    public static function getRows(): array
-    {
-        return range(self::ROW_START, self::ROW_END);
-    }
-
-    public function render() :array
-    {
-        foreach ($this->getCases() as $col=>$cases) {
+        foreach ($this->getCases() as $col => $cases) {
             krsort($cases);
-            foreach ($cases as $row=>$piece) {
-                $render[$col.$row] = $piece;
+            foreach ($cases as $row => $piece) {
+                $render[$col . $row] = $piece;
             }
         }
 
