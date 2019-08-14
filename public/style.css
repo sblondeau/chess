@@ -107,7 +107,7 @@
 #threed:checked ~ .chessboard {
     --rotation: 50deg;
 }#threed:checked ~ .chessboard .case .piece{
-     transform: rotateX(-90deg) translateZ(calc(var(--case-size) / 4)) translateY(calc(var(--case-size) * -0.5)) scaleY(1.3);
+     transform: rotateX(-90deg) translateY(calc(var(--case-size) * -0.5)) scaleY(1.3);
 }
 
 
