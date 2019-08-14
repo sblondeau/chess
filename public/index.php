@@ -28,13 +28,20 @@ $chessboard = new ChessBoard($_SESSION['chessboard'] ?? ChessBoardInitializer::C
 
 $game = new Game($chessboard, true, $movesRecording);
 
-
-if ($start && $end) {
-    try {
+try {
+    if ($start && $end) {
         $game->gameMove($start, $end);
-    } catch (LogicException $exception) {
-        $error = $exception->getMessage();
+        unset($start);
+        unset($end);
     }
+    if (isset($_GET['roque'])) {
+        $game->roque($type = $_GET['roque'], $game->getRound());
+    }
+    if (isset($_GET['promote'])) {
+        $game->promote($game->getChessBoard()->getPiece($game->readyToPromote()), $_GET['promote']);
+    }
+} catch (LogicException $exception) {
+    $error = $exception->getMessage();
     unset($start);
     unset($end);
 }
@@ -43,10 +50,12 @@ $_SESSION['chessboard'] = ChessBoardInitializer::createInitFromPieces($chessboar
 $_SESSION['movesRecording'] = $game->getMovesRecording();
 
 echo $twig->render('index.html.twig', [
-        'error'      => $error ?? '',
-        'start' => $start ?? null,
+        'error'          => $error ?? '',
+        'start'          => $start ?? null,
         'movesRecording' => $_SESSION['movesRecording'],
-        'chessboard' => $chessboard->render(),
+        'chessboard'     => $chessboard->render(),
+        'round'          => $game->getRound(),
+        'promotion'          => $game->readyToPromote(),
     ]
 );
 

@@ -5,6 +5,8 @@ namespace App;
 
 class Game
 {
+    const COLORS = ['white', 'black'];
+    const PROMOTION_PIECES = [Queen::class, Bishop::class, Tower::class, Knight::class];
     /**
      * @var ChessBoard
      */
@@ -181,20 +183,32 @@ class Game
      */
     public function promote(Pawn $pawn, string $pieceType)
     {
-        if (!in_array($pieceType, [Queen::class, Bishop::class, Tower::class, Knight::class])) {
+        if (!in_array($pieceType, self::PROMOTION_PIECES)) {
             throw new \LogicException('Wrong piece for promotion');
         }
         $case = $this->getChessBoard()->searchPiece($pawn);
         $row = substr($case, 1, 1);
+
         if ($pawn->getColor() === 'white' && $row == 8 || $pawn->getColor() == 'black' && $row == 1) {
             $piece = new $pieceType($pawn->getColor());
             $this->getChessBoard()->setPiece($case, $piece);
 
             $this->movesRecording->record($piece, $case, $case);
-
         } else {
             throw new \LogicException('Impossible to promote this pawn');
         }
+    }
+
+    public function readyToPromote(): ?string
+    {
+        $pawn = $this->getMovesRecording()->last()[0];
+        $row = substr($this->getMovesRecording()->last()[2], 1, 1) ?? 0;
+        if ($pawn instanceof Pawn &&
+            ($pawn->getColor() === 'white' && $row == 8 || $pawn->getColor() == 'black' && $row == 1)
+        ) {
+            return $this->getMovesRecording()->last()[2];
+        }
+        return null;
     }
 
     /**
@@ -205,4 +219,18 @@ class Game
         return $this->movesRecording;
     }
 
+    public function getRound()
+    {
+        $color = 'black';
+        $piece = $this->movesRecording->last()[0];
+        if ($piece instanceof Piece) {
+            $color = $piece->getColor();
+        }
+        $oppositeColor = 'white';
+        if ($color == 'white') {
+            $oppositeColor = 'black';
+        }
+
+        return $oppositeColor;
+    }
 }

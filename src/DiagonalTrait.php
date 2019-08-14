@@ -18,7 +18,7 @@ Trait DiagonalTrait
                     $case = ChessBoard::getColumns()[$col - 1] . $row;
                     if ($chessBoard->isEmptyCase($case)) {
                         $cases[] = $case;
-                    } elseif($chessBoard->getPiece($case)->getColor() !== $this->getColor()) {
+                    } elseif ($chessBoard->getPiece($case)->getColor() !== $this->getColor()) {
                         $cases[] = $case;
                         break;
                     } else {

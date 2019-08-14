@@ -173,7 +173,7 @@ class ChessBoard
             $col = $matches[1];
             $row = (int)$matches[2];
         } else {
-            throw new \LogicException('This coordinate does\'nt exist');
+            throw new \LogicException('The coordinate "'. $coords.'" does\'nt exist');
         }
 
         return [$col, $row];

@@ -17,13 +17,13 @@
 
 
 <div class="container">
+    <div class="round">Player : {{ round }}</div>
     <div class="error">{{ error }}</div>
     <input hidden type="checkbox" id="switch"/>
     <input hidden type="checkbox" id="threed"/>
 
 
     <div class="chessboard">
-
         {% for coord, piece in chessboard %}
             {% if loop.index0 % 8 == 0 %}
                 <div class="nothing"></div>{% endif %}
@@ -38,13 +38,20 @@
 
     <div class="moves">
         <h2>Moves</h2>
+        <a href="?roque=small">Small roque</a>
+        <a href="?roque=big">Big roque</a>
+        {% if promotion %}
+            <h3>Promotion available</h3>
+            {% for promotePiece in constant('App\\Game::PROMOTION_PIECES') %}
+                <a href="?promote={{promotePiece}}">{{promotePiece}}</a>
+            {% endfor %}
+        {% endif %}
         <ul>
             {% for move in movesRecording.moves %}
                 <li>{{ move[0].symbol }} : {{ move[1] }} -> {{ move[2] }}</li>
             {% endfor %}
         </ul>
     </div>
-
 </div>
 </body>
 </html>
